@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
+    "dev:client": "npm run dev --prefix client",
     "sync": "tsx scripts/sync.ts",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit && npm run build --prefix client",
+    "build:client": "npm run build --prefix client"
   },
   "dependencies": {
     "@vercel/blob": "^0.27.3",
