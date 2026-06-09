@@ -18,7 +18,7 @@ export default function PhotoGallery({ photos, title }: PhotoGalleryProps) {
   return (
     <div>
       <div className="gallery-main">
-        <img src={displayPhoto(active)} alt={title} />
+        <img src={displayPhoto(active)} alt={title} loading="eager" />
       </div>
       {photos.length > 1 && (
         <div className="gallery-thumbs">
@@ -30,7 +30,7 @@ export default function PhotoGallery({ photos, title }: PhotoGalleryProps) {
               onClick={() => setActiveIndex(index)}
               aria-label={`Foto ${index + 1}`}
             >
-              <img src={cleanPhotoUrl(photo.thumb)} alt="" />
+              <img src={cleanPhotoUrl(photo.full || photo.thumb)} alt="" />
             </button>
           ))}
         </div>

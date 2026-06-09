@@ -1,9 +1,9 @@
 import type { InventoryData } from "./types";
 
 export async function fetchInventory(): Promise<InventoryData> {
-  const response = await fetch("/api/vehicles", {
+  const response = await fetch("/api/vehicles?dealer=promovil", {
     cache: "no-store",
-    headers: { "Cache-Control": "no-cache" },
+    headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
   });
 
   if (!response.ok) {

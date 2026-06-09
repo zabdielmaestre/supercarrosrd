@@ -14,17 +14,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     let data = forceRefresh ? null : await loadInventory();
 
+    if (data && data.dealer.slug !== dealerSlug) {
+      data = null;
+    }
+
     if (!data) {
       data = await scrapeDealerInventory(dealerSlug, { includeDetails: details });
     }
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-      "Cache-Control",
-      forceRefresh
-        ? "no-store, no-cache, must-revalidate"
-        : "public, s-maxage=300, stale-while-revalidate=600"
-    );
+    res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+    res.setHeader("CDN-Cache-Control", "no-store");
+    res.setHeader("Vercel-CDN-Cache-Control", "no-store");
     return res.status(200).json(data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
