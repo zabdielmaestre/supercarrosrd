@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { VehiclePhoto } from "../types";
+import { cleanPhotoUrl, displayPhoto } from "../utils/photos";
 
 interface PhotoGalleryProps {
   photos: VehiclePhoto[];
@@ -17,7 +18,7 @@ export default function PhotoGallery({ photos, title }: PhotoGalleryProps) {
   return (
     <div>
       <div className="gallery-main">
-        <img src={active.large || active.full} alt={title} />
+        <img src={displayPhoto(active)} alt={title} />
       </div>
       {photos.length > 1 && (
         <div className="gallery-thumbs">
@@ -29,7 +30,7 @@ export default function PhotoGallery({ photos, title }: PhotoGalleryProps) {
               onClick={() => setActiveIndex(index)}
               aria-label={`Foto ${index + 1}`}
             >
-              <img src={photo.thumb} alt="" />
+              <img src={cleanPhotoUrl(photo.thumb)} alt="" />
             </button>
           ))}
         </div>

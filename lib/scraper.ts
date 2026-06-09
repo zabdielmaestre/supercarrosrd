@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { buildCleanPhotoUrls, toCleanThumbnail } from "./photos.js";
 import type {
   DealerInfo,
   InventoryData,
@@ -138,7 +139,7 @@ function extractListingSummaries($: cheerio.CheerioAPI): VehicleSummary[] {
       brand: parsedTitle.brand,
       model: parsedTitle.model,
       price: parsePrice(priceRaw),
-      thumbnail,
+      thumbnail: toCleanThumbnail(thumbnail),
       hasVideo: item.hasClass("video"),
     });
   });
@@ -155,10 +156,8 @@ function extractPhotos($: cheerio.CheerioAPI): VehiclePhoto[] {
     const full = anchor.attr("href");
     if (!id || !full) return;
 
-    const thumb = anchor.find("img").attr("src") ?? "";
-    const large = full.replace("/1024x768/", "/800x600/");
-
-    photos.set(id, { id, full, large, thumb });
+    const clean = buildCleanPhotoUrls(id);
+    photos.set(id, { id, ...clean });
   });
 
   return [...photos.values()];
@@ -319,14 +318,11 @@ export async function scrapeDealerInventory(
       adNumber: summary.id,
       views: null,
       photos: summary.thumbnail
-        ? [
-            {
-              id: summary.id,
-              full: summary.thumbnail.replace("/282x188/", "/1024x768/"),
-              large: summary.thumbnail.replace("/282x188/", "/800x600/"),
-              thumb: summary.thumbnail,
-            },
-          ]
+        ? (() => {
+            const photoId =
+              summary.thumbnail.match(/\/(\d+)\.jpg/)?.[1] ?? summary.id;
+            return [{ id: photoId, ...buildCleanPhotoUrls(photoId) }];
+          })()
         : [],
       specs: {},
       accessories: [],

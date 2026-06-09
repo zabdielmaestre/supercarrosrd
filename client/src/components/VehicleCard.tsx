@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { Vehicle } from "../types";
+import { vehicleCardImage } from "../utils/photos";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -16,7 +17,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     <Link to={`/vehiculo/${vehicle.id}`} className="card">
       <div className="card-image-wrap">
         <img
-          src={vehicle.thumbnail}
+          src={vehicleCardImage(vehicle)}
           alt={vehicle.title}
           className="card-image"
           loading="lazy"

@@ -19,7 +19,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
+    res.setHeader(
+      "Cache-Control",
+      forceRefresh
+        ? "no-store, no-cache, must-revalidate"
+        : "public, s-maxage=300, stale-while-revalidate=600"
+    );
     return res.status(200).json(data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Error desconocido";
