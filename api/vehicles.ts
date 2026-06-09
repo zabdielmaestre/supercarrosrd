@@ -10,7 +10,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const forceRefresh = req.query.refresh === "1";
     const details = req.query.details !== "0";
-    const dealerSlug = (req.query.dealer as string) || process.env.DEALER_SLUG || "parraautoimport";
+    const dealerSlug = (req.query.dealer as string) || process.env.DEALER_SLUG || "promovil";
 
     let data = forceRefresh ? null : await loadInventory();
 

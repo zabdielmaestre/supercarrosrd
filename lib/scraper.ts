@@ -10,7 +10,7 @@ import type {
 } from "./types.js";
 
 const BASE_URL = "https://www.supercarros.com";
-const DEFAULT_DEALER_SLUG = "parraautoimport";
+const DEFAULT_DEALER_SLUG = "promovil";
 const USER_AGENT =
   "supercarrosrd-sync/1.0 (+https://github.com/supercarrosrd)";
 

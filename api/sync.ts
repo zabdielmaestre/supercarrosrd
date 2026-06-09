@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const dealerSlug = (req.query.dealer as string) || process.env.DEALER_SLUG || "parraautoimport";
+    const dealerSlug = (req.query.dealer as string) || process.env.DEALER_SLUG || "promovil";
     const previous = await loadInventory();
     const data = await scrapeDealerInventory(dealerSlug, { includeDetails: true });
 

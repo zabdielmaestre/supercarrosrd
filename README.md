@@ -2,7 +2,7 @@
 
 Sincroniza el inventario de un dealer de [SuperCarros.com](https://www.supercarros.com) y lo expone como JSON vía API en Vercel.
 
-**Dealer por defecto:** [Kelvyn Parra Auto Import](https://www.supercarros.com/dealers/parraautoimport/)
+**Dealer por defecto:** [Promovil Showroom](https://www.supercarros.com/dealers/promovil/)
 
 ## Endpoints
 
@@ -18,10 +18,9 @@ Sincroniza el inventario de un dealer de [SuperCarros.com](https://www.supercarr
 ```json
 {
   "dealer": {
-    "slug": "parraautoimport",
-    "name": "Kelvyn Parra Auto Import",
-    "phone": "809-536-2015",
-    "url": "https://www.supercarros.com/dealers/parraautoimport/"
+    "slug": "promovil",
+    "name": "Promovil Showroom",
+    "url": "https://www.supercarros.com/dealers/promovil/"
   },
   "updatedAt": "2026-06-09T12:00:00.000Z",
   "total": 30,
@@ -65,7 +64,7 @@ Luego abre: `http://localhost:3000/api/vehicles`
 
 1. Sube el repo a GitHub y conéctalo en [vercel.com](https://vercel.com)
 2. En **Settings → Environment Variables** agrega:
-   - `DEALER_SLUG` = `parraautoimport`
+   - `DEALER_SLUG` = `promovil`
    - `CRON_SECRET` = un string aleatorio largo
 3. (Recomendado) Conecta **Vercel Blob** en el proyecto para que el JSON persista entre invocaciones
 4. Deploy

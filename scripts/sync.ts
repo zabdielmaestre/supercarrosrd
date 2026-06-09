@@ -1,7 +1,7 @@
 import { scrapeDealerInventory } from "../lib/scraper.js";
 import { saveInventory } from "../lib/storage.js";
 
-const dealerSlug = process.env.DEALER_SLUG ?? "parraautoimport";
+const dealerSlug = process.env.DEALER_SLUG ?? "promovil";
 
 console.log(`Sincronizando inventario de ${dealerSlug}...`);
 
