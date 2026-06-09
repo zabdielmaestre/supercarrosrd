@@ -70,7 +70,7 @@ Luego abre: `http://localhost:3000/api/vehicles`
 3. (Recomendado) Conecta **Vercel Blob** en el proyecto para que el JSON persista entre invocaciones
 4. Deploy
 
-El cron en `vercel.json` ejecuta `/api/sync` cada 6 horas automáticamente.
+El cron en `vercel.json` ejecuta `/api/sync` una vez al día (8:00 UTC). En el plan Hobby de Vercel solo se permite un cron diario.
 
 ### Sincronización manual
 
