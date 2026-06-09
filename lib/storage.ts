@@ -12,7 +12,13 @@ const LOCAL_DATA_PATH = join(
   "vehicles.json"
 );
 
-export async function saveInventory(data: InventoryData): Promise<void> {
+export type SaveResult = {
+  stored: boolean;
+  method: "blob" | "local" | "none";
+  message?: string;
+};
+
+export async function saveInventory(data: InventoryData): Promise<SaveResult> {
   const json = JSON.stringify(data, null, 2);
 
   if (process.env.BLOB_READ_WRITE_TOKEN) {
@@ -21,11 +27,21 @@ export async function saveInventory(data: InventoryData): Promise<void> {
       contentType: "application/json",
       addRandomSuffix: false,
     });
-    return;
+    return { stored: true, method: "blob" };
+  }
+
+  if (process.env.VERCEL) {
+    return {
+      stored: false,
+      method: "none",
+      message:
+        "Sin Vercel Blob configurado. La API usa scrape en vivo con caché CDN de 1 hora.",
+    };
   }
 
   await mkdir(dirname(LOCAL_DATA_PATH), { recursive: true });
   await writeFile(LOCAL_DATA_PATH, json, "utf8");
+  return { stored: true, method: "local" };
 }
 
 export async function loadInventory(): Promise<InventoryData | null> {

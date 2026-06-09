@@ -28,8 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const previous = await loadInventory();
     const data = await scrapeDealerInventory(dealerSlug, { includeDetails: true });
 
-    await saveInventory(data);
-
+    const saveResult = await saveInventory(data);
     const blobUrl = await getPublicInventoryUrl();
 
     return res.status(200).json({
@@ -38,6 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       total: data.total,
       updatedAt: data.updatedAt,
       previousUpdatedAt: previous?.updatedAt ?? null,
+      storage: saveResult,
       blobUrl,
       endpoints: {
         vehicles: "/api/vehicles",
