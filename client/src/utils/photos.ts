@@ -2,29 +2,39 @@ import type { Vehicle, VehiclePhoto } from "../types";
 
 const IMG_BASE = "https://img.supercarros.com/AdsPhotos";
 
-/** SuperCarros: /5/ = con logo, /0/ = sin logo */
-export function cleanPhotoUrl(url: string): string {
-  if (!url) return url;
-  return url.replace(/(\/AdsPhotos\/[^/]+\/)\d+\//, "$10/");
+const WMO_TOKEN =
+  "da1fb07af0a8f1ac166f343e6a5ee864bd60526d3cac1af2c60a3487705b7fd0b760ca314bfef58a51251593cf523d50d4322926bb4584afc23af4e28ecf23c1";
+
+export function withoutWatermark(url: string): string {
+  if (!url || !url.includes("img.supercarros.com")) return url;
+  if (url.includes("wmo=")) return url;
+
+  const base = url.split("?")[0];
+  return `${base}?wmo=${WMO_TOKEN}`;
 }
 
 function photoIdFromUrl(url: string): string | null {
   return url.match(/\/(\d+)\.jpg(?:\?.*)?$/i)?.[1] ?? null;
 }
 
-function cleanById(url: string, size: string): string {
+function photoBySize(url: string, size: string): string {
   const id = photoIdFromUrl(url);
-  if (!id) return cleanPhotoUrl(url);
-  return `${IMG_BASE}/${size}/0/${id}.jpg`;
+  if (!id) return withoutWatermark(url);
+  return withoutWatermark(`${IMG_BASE}/${size}/0/${id}.jpg`);
 }
 
 export function displayPhoto(photo: VehiclePhoto): string {
-  return cleanPhotoUrl(photo.full || photo.large);
+  return withoutWatermark(photo.full || photo.large);
 }
 
 export function vehicleCardImage(vehicle: Vehicle): string {
   const first = vehicle.photos[0];
-  if (first?.full) return cleanPhotoUrl(first.full);
-  if (vehicle.thumbnail) return cleanById(vehicle.thumbnail, "282x188");
+  if (first?.full) return withoutWatermark(first.full);
+  if (vehicle.thumbnail) return photoBySize(vehicle.thumbnail, "282x188");
   return "";
+}
+
+/** @deprecated usar withoutWatermark */
+export function cleanPhotoUrl(url: string): string {
+  return withoutWatermark(url);
 }

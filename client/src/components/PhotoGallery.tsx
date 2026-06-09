@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { VehiclePhoto } from "../types";
-import { cleanPhotoUrl, displayPhoto } from "../utils/photos";
+import { displayPhoto, withoutWatermark } from "../utils/photos";
 
 interface PhotoGalleryProps {
   photos: VehiclePhoto[];
@@ -30,7 +30,7 @@ export default function PhotoGallery({ photos, title }: PhotoGalleryProps) {
               onClick={() => setActiveIndex(index)}
               aria-label={`Foto ${index + 1}`}
             >
-              <img src={cleanPhotoUrl(photo.full || photo.thumb)} alt="" />
+              <img src={withoutWatermark(photo.full || photo.thumb)} alt="" />
             </button>
           ))}
         </div>
