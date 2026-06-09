@@ -20,6 +20,8 @@ export interface VehiclePhoto {
   full: string;
   large: string;
   thumb: string;
+  card?: string;
+  wmo?: string;
 }
 
 export interface VehicleSpecs {

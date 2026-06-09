@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import { buildCleanPhotoUrls, toCleanThumbnail } from "./photos.js";
+import { fetchVehiclePhotoWmos } from "./wmo.js";
 import type {
   DealerInfo,
   InventoryData,
@@ -147,17 +148,20 @@ function extractListingSummaries($: cheerio.CheerioAPI): VehicleSummary[] {
   return vehicles;
 }
 
-function extractPhotos($: cheerio.CheerioAPI): VehiclePhoto[] {
+function extractPhotos(
+  $: cheerio.CheerioAPI,
+  wmoMap: Map<string, string>
+): VehiclePhoto[] {
   const photos = new Map<string, VehiclePhoto>();
 
   $("#detail-ad-info-photos a[data-photo]").each((_, el) => {
     const anchor = $(el);
     const id = anchor.attr("data-photo");
-    const full = anchor.attr("href");
-    if (!id || !full) return;
+    if (!id) return;
 
-    const clean = buildCleanPhotoUrls(id);
-    photos.set(id, { id, ...clean });
+    const wmo = wmoMap.get(id);
+    const clean = buildCleanPhotoUrls(id, wmo);
+    photos.set(id, { id, wmo, ...clean });
   });
 
   return [...photos.values()];
@@ -252,7 +256,10 @@ function extractDescription($: cheerio.CheerioAPI): string {
 }
 
 async function fetchVehicleDetail(summary: VehicleSummary): Promise<Vehicle> {
-  const html = await fetchHtml(summary.url);
+  const [html, wmoMap] = await Promise.all([
+    fetchHtml(summary.url),
+    fetchVehiclePhotoWmos(summary.url),
+  ]);
   const $ = cheerio.load(html);
 
   const headerTitle = decodeHtml($("#detail-ad-header h1").text());
@@ -272,7 +279,7 @@ async function fetchVehicleDetail(summary: VehicleSummary): Promise<Vehicle> {
     price: headerPrice.formatted ? headerPrice : summary.price,
     adNumber: adMatch?.[1] ?? summary.id,
     views: viewsMatch ? Number(viewsMatch[1]) : null,
-    photos: extractPhotos($),
+    photos: extractPhotos($, wmoMap),
     specs: extractSpecsTable($),
     accessories: extractAccessories($),
     description: extractDescription($),
